@@ -1,10 +1,10 @@
 
-// criando uma tipagem
-interface DataProps {
+
+interface DataProps{
   id: number;
   name: string;
   full_name: string;
-  owner: {
+  owner:{
     login: string;
     id: number;
     avatar_url: string;
@@ -12,28 +12,39 @@ interface DataProps {
   }
 }
 
-async function getData() {
-  // https://api.github.com/users/devfraga/repos
-  // const response = await fetch("https://api.github.com/users/devfraga/repos");
-  const response = await fetch("https://api.github.com/users/lennonconstantino/repos");
+async function delayFetch(url: string, delay: number){
+  await new Promise(resolve => setTimeout(resolve, delay))
+  const response = await fetch(url);
   return response.json();
 }
 
-export default async function Home() {
-  // nao precisamos usar o useEffect
+// async function getData(){
+//   // https://api.github.com/users/devfraga/repos
+//   const response = await fetch("https://api.github.com/users/devfraga/repos")
+
+//   return response.json();
+// }
+
+async function getData(){
+  const data = await delayFetch("https://api.github.com/users/devfraga/repos", 3500)
+  return data;
+}
+
+
+export default async function Home(){
   const data: DataProps[] = await getData();
-  console.log(data);
+
   return(
     <main>
-      <h1>Pagina Home</h1>
-      <span>Seja bem vindo a minha pagina home</span>
+      <h1>Página Home</h1>
+      <span>Seja bem vindo a página home</span>
       <br/>
-      <h3> Meus repositorios</h3>
-      {data.map((item) => (
+
+      <h3>Meus repositorios</h3>
+      {data.map( (item) => (
         <div key={item.id}>
-          <strong>Repositorio: </strong><a>{item.name}</a>
-          <br />
-          <br />
+          <strong>Repositório: </strong> <a>{item.name}</a>
+          <br/><br/>
         </div>
       ))}
     </main>
